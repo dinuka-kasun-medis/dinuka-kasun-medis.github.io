@@ -1,0 +1,8 @@
+[package]
+name = "dinuka_kasun_medis_github_io"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "dinuka-kasun-medis_github_io"
+path = "src/main.rs"
