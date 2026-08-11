@@ -217,6 +217,49 @@ body::after {
 }
 .link-icon { font-size: 15px; }
 
+.instagram-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.instagram-grid > div {
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto;
+}
+.instagram-grid blockquote.instagram-media {
+  display: block !important;
+  width: 200px !important;
+  min-width: 200px !important;
+  max-width: 200px !important;
+  height: 260px !important;
+  min-height: 260px !important;
+  max-height: 260px !important;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.instagram-grid blockquote.instagram-media * {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  max-height: 100% !important;
+}
+.instagram-grid blockquote.instagram-media a {
+  display: block;
+  width: 100% !important;
+}
+@media (max-width: 900px) {
+  .instagram-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .instagram-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ── Blinking cursor ── */
 .cursor {
   display: inline-block;
@@ -250,4 +293,17 @@ body::after {
 @media (max-width: 560px) {
   .body { padding: 20px 18px 24px; }
   .hero-meta { grid-template-columns: 1fr; }
+}
+
+.instagram-embed {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+  width: 100%;
+}
+
+.instagram-embed .instagram-media {
+  width: 100% !important;
+  max-width: 540px !important;
+  min-width: 0 !important;
 }
