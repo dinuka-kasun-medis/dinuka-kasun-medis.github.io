@@ -1,0 +1,11 @@
+Title: Your Article Title Here
+Date: 2026-11-20
+Category: Listening
+Band: 145.625 MHz
+Summary: A short introduction used on the blog cards.
+Instagram: https://www.instagram.com/p/REPLACE_THIS/
+ImageAlt: Description of your image for accessibility
+---
+Your first paragraph goes here. You can paste your complete Instagram caption, including emojis and hashtags.
+
+Leave one empty line between paragraphs.

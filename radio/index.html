@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#1c302b" />
+  <meta name="description" content="A vintage-inspired listening journal about SDR, antennas and the invisible world of radio." />
+  <title>Signal & Static — A Radio Listening Journal</title>
+  <style>
+    :root {
+      --paper: #eae2d0; --paper-soft: #f2ebdc; --paper-deep: #d8cbb0;
+      --ink: #21342d; --ink-2: #426050; --ink-light: #7c806c;
+      --forest: #1c302b; --forest-light: #2b493d;
+      --accent: #bd603e; --accent-2: #d69a58;
+      --line: rgba(41,60,46,.2); --shadow: 0 24px 55px rgba(30,35,27,.14);
+      --serif: Georgia, 'Times New Roman', serif;
+      --mono: 'Courier New', Courier, monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin:0; color:var(--ink); background:var(--paper); font-family:var(--serif); min-width:320px; }
+    body::before { content:""; position:fixed; inset:0; z-index:50; pointer-events:none; opacity:.16; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.24'/%3E%3C/svg%3E"); }
+    a { color:inherit; } button, input { font:inherit; }
+    button { cursor:pointer; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline:3px solid var(--accent); outline-offset:4px; }
+    .shell { width:min(1180px,calc(100% - 56px)); margin-inline:auto; }
+    .micro { font:700 10px/1.5 var(--mono); letter-spacing:.16em; text-transform:uppercase; }
+    .eyebrow { display:flex; gap:11px; align-items:center; font:700 10px/1.5 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:var(--accent); }
+    .eyebrow::before { content:""; width:22px; height:1px; background:currentColor; }
+    .topbar { background:var(--forest); color:#e8dfc9; font:700 10px/1 var(--mono); letter-spacing:.12em; }
+    .topbar .shell { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:11px 0; }
+    .on-air { display:flex; align-items:center; gap:10px; }
+    .on-air::before { content:""; width:7px; height:7px; border-radius:50%; background:#d87549; box-shadow:0 0 10px #d8754980; animation:blink 2s infinite; }
+    @keyframes blink { 50% {opacity:.35;} }
+    .mainnav { min-height:106px; display:flex; align-items:center; justify-content:space-between; gap:25px; border-bottom:1px solid var(--line); }
+    .brand { display:flex; align-items:center; gap:17px; text-decoration:none; }
+    .brand-icon { width:57px; height:57px; border-radius:11px; border:3px double var(--accent-2); background:var(--forest); box-shadow:inset 0 0 0 4px var(--forest), inset 0 0 0 5px #cdae7e; position:relative; flex:none; }
+    .brand-icon::before { content:""; position:absolute; left:9px; right:9px; top:11px; height:20px; background:repeating-linear-gradient(90deg,transparent 0 4px,#cfae79 4px 5px); border-top:1px solid #cfae79; border-bottom:1px solid #cfae79; opacity:.9; }
+    .brand-icon::after { content:""; position:absolute; left:22px; bottom:8px; width:10px; height:10px; border:2px solid #cfae79; border-radius:50%; }
+    .brand-title { font-size:30px; letter-spacing:-1.9px; font-weight:700; line-height:.98; }
+    .brand-title i { font-style:italic; color:var(--accent); font-weight:400; }
+    .brand-sub { display:block; margin-top:7px; font:700 9px var(--mono); letter-spacing:.23em; }
+    .navlinks { display:flex; gap:33px; align-items:center; font:700 11px var(--mono); letter-spacing:.12em; text-transform:uppercase; }
+    .navlinks a { text-decoration:none; transition:color .2s; }
+    .navlinks a:hover { color:var(--accent); }
+    .navlinks .nav-cta { padding:13px 15px; background:var(--forest); color:var(--paper-soft); border:1px solid var(--forest); }
+    .navlinks .nav-cta:hover { color:white; background:var(--forest-light); }
+    .hero { display:grid; grid-template-columns:1fr .9fr; gap:5%; padding:73px 0 67px; align-items:center; }
+    .hero h1 { margin:17px 0 24px; font-size:clamp(62px,7vw,104px); line-height:.93; letter-spacing:-.072em; font-weight:400; }
+    .hero h1 em { color:var(--accent); font-weight:400; }
+    .hero-desc { max-width:440px; font-size:18px; line-height:1.65; color:#5a6556; }
+    .hero-meta { display:flex; gap:12px; align-items:center; margin-top:31px; font:700 10px var(--mono); letter-spacing:.1em; }
+    .hero-meta .dash { height:1px; width:39px; background:var(--accent); }
+    .hero-button { display:inline-flex; gap:15px; align-items:center; margin-top:31px; text-decoration:none; color:var(--forest); border-bottom:2px solid var(--accent); padding:0 0 9px; font:700 12px var(--mono); text-transform:uppercase; letter-spacing:.1em; }
+    .hero-button span { color:var(--accent); font-size:20px; }
+    .receiver-wrap { position:relative; padding:33px 10px 26px 23px; }
+    .receiver-wrap::before { content:""; position:absolute; width:260px; height:260px; border:1px solid #c8bca4; border-radius:50%; top:-6px; right:-17px; }
+    .receiver-wrap::after { content:""; position:absolute; width:340px; height:340px; border:1px dashed #c8bca4; border-radius:50%; top:-46px; right:-57px; z-index:-1; }
+    .receiver { border:10px solid #77583a; border-bottom-color:#5e422c; border-right-color:#5e422c; border-radius:23px; padding:20px; background:#c7aa74; box-shadow:10px 17px 0 #b39a71,14px 32px 42px #4a3d2e42; transform:rotate(1.2deg); position:relative; }
+    .receiver::before { content:""; position:absolute; top:-15px; left:36px; right:36px; height:6px; background:#705137; border-radius:6px 6px 0 0; }
+    .receiver-head { display:flex; justify-content:space-between; align-items:center; gap:10px; border-bottom:1px solid #725f45; padding-bottom:13px; color:#463f30; }
+    .receiver-head span:first-child { font:800 14px var(--serif); letter-spacing:.18em; }
+    .receiver-head span:last-child { font:700 8px var(--mono); letter-spacing:.12em; }
+    .receiver-face { background:#223e32; border:6px solid #876c44; box-shadow:inset 0 3px 12px #0009; border-radius:5px; min-height:180px; padding:14px 16px; color:#e3c58b; }
+    .receiver-rules { height:36px; border-top:1px solid #a7a06c; border-bottom:1px solid #a7a06c; background:repeating-linear-gradient(90deg,transparent 0 13px,#cfbf85 13px 14px,transparent 14px 28px); position:relative; margin-bottom:20px; }
+    .receiver-rules::after { content:""; position:absolute; height:38px; width:3px; background:#e99d60; left:59%; top:-1px; box-shadow:0 0 11px #ee8a65; }
+    .receiver-freq { font:700 clamp(28px,4vw,47px)/1 var(--mono); letter-spacing:.05em; text-shadow:0 0 11px #f9d69e66; }
+    .receiver-unit { font:700 11px var(--mono); letter-spacing:.15em; margin:8px 0; }
+    .receiver-caption { font:700 9px var(--mono); letter-spacing:.13em; color:#bcbd97; margin-top:17px; }
+    .receiver-bottom { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; padding-top:19px; }
+    .band-buttons { display:flex; gap:7px; flex-wrap:wrap; }
+    .band-buttons button { border:1px solid #705940; background:#d7be8f; box-shadow:inset 0 -3px #b39767; color:#4b4535; padding:9px 10px 11px; font:700 10px var(--mono); transition:transform .2s; }
+    .band-buttons button:active { transform:translateY(2px); }
+    .band-buttons button.active { background:#e5d8b3; box-shadow:inset 0 -2px #a78357; outline:1px solid #433b2e; }
+    .knob { width:63px; height:63px; background:radial-gradient(circle at 38% 35%,#6f6250,#363b32 60%,#292f29 70%); border:6px solid #a58b62; border-radius:50%; position:relative; box-shadow:2px 4px 4px #705f4a; }
+    .knob::after { content:""; position:absolute; top:6px; left:27px; width:3px; height:16px; border-radius:4px; background:#d2ad71; }
+    .section-rule { display:flex; justify-content:space-between; align-items:center; gap:20px; border-top:1px solid var(--ink); padding:18px 0 25px; }
+    .section-rule h2 { margin:0; font-size:14px; letter-spacing:.05em; font-weight:700; }
+    .section-rule span { font:700 10px var(--mono); letter-spacing:.11em; color:#747d69; }
+    .featured { display:grid; grid-template-columns:1.02fr .98fr; border:1px solid var(--line); background:#f0e8d8; box-shadow:0 10px 35px #453c2f0b; }
+    .feature-copy { padding:46px clamp(24px,4vw,58px); display:flex; flex-direction:column; align-items:flex-start; justify-content:center; }
+    .tag-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; font:700 10px var(--mono); letter-spacing:.08em; text-transform:uppercase; }
+    .tag { padding:7px 9px; color:#ecdfbc; background:var(--forest); }
+    .tag-separator { color:#a9a18e; }
+    .feature-copy h3 { margin:25px 0 17px; font-size:clamp(39px,4vw,58px); line-height:1.04; font-weight:400; letter-spacing:-.055em; }
+    .feature-copy p { margin:0; color:#667062; line-height:1.72; font-size:16px; }
+    .read-link { margin-top:34px; display:inline-flex; align-items:center; gap:20px; font:700 11px var(--mono); text-transform:uppercase; letter-spacing:.12em; text-decoration:none; border-bottom:1px solid var(--accent); padding-bottom:9px; }
+    .read-link span { color:var(--accent); font-size:17px; }
+    .photo-frame { position:relative; overflow:hidden; background:#d0b890; }
+    .feature-photo { min-height:480px; }
+    .photo-frame img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:3; }
+    .visual-art { position:absolute; inset:0; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:center; background:radial-gradient(circle at 58% 41%,#e2d1aa,#9e8057 80%); color:#4a422f; }
+    .visual-art::before { content:""; position:absolute; inset:25px; border:1px solid #ffffff6b; }
+    .visual-art::after { content:""; width:130%; height:110px; position:absolute; left:-15%; bottom:8%; transform:rotate(-16deg); border-top:2px solid #63523c42; border-bottom:2px solid #63523c42; background:repeating-linear-gradient(0deg,transparent 0 12px,#543f2914 12px 13px); }
+    .visual-art[data-theme="antenna"] { background:radial-gradient(circle at 70% 35%,#c9d7cb,#718777 85%); }
+    .visual-art[data-theme="sdr"] { background:radial-gradient(circle at 43% 30%,#dfcba6,#b38e64 80%); }
+    .visual-art[data-theme="websdr"] { background:radial-gradient(circle at 70% 30%,#c3cebb,#809985 83%); }
+    .art-circle { position:absolute; width:235px; height:235px; border:1px dashed #403e3466; border-radius:50%; }
+    .art-circle::before,.art-circle::after { content:""; position:absolute; inset:24px; border:1px solid #403e344b; border-radius:50%; }
+    .art-circle::after { inset:56px; }
+    .art-signal { position:relative; z-index:1; width:min(65%,290px); height:150px; }
+    .art-signal svg { width:100%; height:100%; overflow:visible; }
+    .art-signal path, .art-signal line, .art-signal rect { stroke:#34483f; stroke-width:2.5; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+    .visual-art h4 { position:relative; z-index:2; margin:17px 0 7px; padding:0 20px; font:700 19px var(--mono); letter-spacing:.17em; text-align:center; }
+    .visual-art small { position:relative; z-index:2; font:700 10px var(--mono); letter-spacing:.18em; text-transform:uppercase; }
+    .visual-stamp { position:absolute; z-index:4; bottom:17px; right:17px; padding:8px 10px; border:1px solid #f4e7cf; background:#1d302a; color:#f1e3c9; font:700 9px var(--mono); letter-spacing:.08em; text-transform:uppercase; }
+    .log-section { padding:80px 0 92px; }
+    .log-top { display:flex; justify-content:space-between; align-items:flex-end; gap:30px; margin-bottom:30px; }
+    .log-top h2 { margin:9px 0 0; font-size:clamp(43px,5vw,63px); letter-spacing:-.06em; line-height:1; font-weight:400; }
+    .log-count { font:700 10px var(--mono); letter-spacing:.09em; color:#6e7667; }
+    .archive-tools { display:flex; justify-content:space-between; gap:16px; align-items:center; border-top:1px solid var(--ink); border-bottom:1px solid var(--line); padding:15px 0; margin-bottom:30px; }
+    .filters { display:flex; gap:8px; flex-wrap:wrap; }
+    .filter { border:1px solid transparent; padding:10px 11px; background:transparent; font:700 10px var(--mono); letter-spacing:.07em; color:#616c5d; }
+    .filter:hover { background:#e0d5bd; }
+    .filter.active { border-color:var(--forest); background:var(--forest); color:#f2e9d9; }
+    .search { display:flex; align-items:center; gap:10px; border-bottom:1px solid #8b927d; padding:5px 0 9px; }
+    .search svg { width:16px; height:16px; stroke:#707c6c; fill:none; stroke-width:2; }
+    .search input { width:164px; border:0; background:transparent; outline:0; color:var(--ink); font:11px var(--mono); }
+    .search input::placeholder { color:#8a8f7e; }
+    .cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:28px; }
+    .post-card { min-width:0; }
+    .card-visual { height:244px; border:1px solid var(--line); }
+    .card-visual .art-signal { width:55%; height:110px; }
+    .card-visual .art-circle { width:155px; height:155px; }
+    .card-visual .visual-art h4 { font-size:13px; }
+    .card-visual .visual-art small { font-size:8px; }
+    .post-card .post-meta { margin-top:20px; display:flex; align-items:center; gap:9px; flex-wrap:wrap; color:#757968; font:700 10px var(--mono); text-transform:uppercase; letter-spacing:.07em; }
+    .post-card h3 { margin:12px 0 12px; font-size:29px; font-weight:400; letter-spacing:-.046em; line-height:1.12; }
+    .post-card h3 a { text-decoration:none; }
+    .post-card h3 a:hover { color:var(--accent); }
+    .post-card p { font-size:14px; color:#637062; line-height:1.65; margin:0; }
+    .post-card .read-link { margin-top:19px; font-size:10px; }
+    .empty { padding:55px; text-align:center; border:1px dashed var(--line); color:#6c7569; }
+    .about-band { background:var(--forest); color:#eae4d1; padding:69px 0; }
+    .about-layout { display:grid; grid-template-columns:.95fr 1fr; gap:90px; align-items:center; }
+    .about-band .eyebrow { color:#d89e71; }
+    .about-layout h2 { font-size:clamp(43px,5vw,68px); line-height:1.05; letter-spacing:-.06em; margin:16px 0; font-weight:400; }
+    .about-layout h2 em { color:#d49c6d; }
+    .about-layout p { color:#c3cabb; font-size:17px; line-height:1.8; margin:0; }
+    .statline { margin-top:25px; padding-top:25px; border-top:1px solid #7b8c7d55; font:700 10px var(--mono); letter-spacing:.12em; color:#d8b584; }
+    .footer { background:#152820; color:#c2cbb8; padding:26px 0; }
+    .footer .shell { display:flex; justify-content:space-between; align-items:center; gap:15px; }
+    .footer .micro { font-size:9px; letter-spacing:.12em; }
+    .footer a { text-decoration:none; border-bottom:1px solid #a1ae96; }
+    .post-page { padding:42px 0 95px; }
+    .back { background:none; border:0; color:var(--accent); padding:0; font:700 11px var(--mono); letter-spacing:.1em; text-transform:uppercase; }
+    .detail-header { max-width:830px; padding:54px 0 35px; }
+    .detail-header h1 { font-size:clamp(51px,7.6vw,97px); letter-spacing:-.066em; line-height:.97; font-weight:400; margin:23px 0 23px; }
+    .detail-intro { font-size:21px; line-height:1.5; color:#687463; max-width:730px; }
+    .detail-image { height:min(59vw,570px); min-height:290px; border:1px solid var(--line); }
+    .detail-content { display:grid; grid-template-columns:220px minmax(0,670px); gap:65px; padding:49px 0; }
+    .detail-info { font:700 11px/2.2 var(--mono); letter-spacing:.04em; color:#607062; border-top:1px solid var(--line); padding-top:19px; }
+    .detail-info strong { display:block; margin-top:14px; font:700 9px/1.7 var(--mono); color:var(--accent); letter-spacing:.14em; }
+    .entry-body p { margin:0 0 24px; font-size:19px; line-height:1.85; color:#35483d; }
+    .entry-body p:first-child::first-letter { float:left; font-size:78px; line-height:.8; padding:9px 12px 0 0; color:var(--accent); }
+    .story-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:34px; }
+    .outline-button { background:transparent; border:1px solid #7c8a76; color:var(--forest); padding:12px 16px; text-decoration:none; font:700 10px var(--mono); letter-spacing:.1em; text-transform:uppercase; }
+    .outline-button:hover { background:#ded6c3; }
+    .related { border-top:1px solid var(--line); padding-top:22px; }
+    .related a { font-size:25px; text-decoration:none; }
+    [hidden] { display:none!important; }
+    @media(max-width:950px) {
+      .hero { grid-template-columns:1fr 1fr; gap:30px; } .hero h1 { font-size:clamp(58px,7.5vw,85px); }
+      .receiver-wrap { padding-left:0; } .receiver { padding:12px; } .receiver-face { min-height:160px; }
+      .cards { gap:17px; } .card-visual { height:215px; } .post-card h3 { font-size:25px; }
+      .about-layout { gap:35px; }
+    }
+    @media(max-width:730px) {
+      .shell { width:calc(100% - 34px); }
+      .topbar .shell { font-size:8px; }
+      .mainnav { min-height:85px; } .brand-icon { width:47px; height:47px; } .brand-title { font-size:26px; }
+      .navlinks { gap:16px; } .navlinks .nav-cta { display:none; } .navlinks a { font-size:10px; }
+      .hero { display:block; padding:60px 0 44px; } .hero h1 { font-size:clamp(57px,12.5vw,86px); }
+      .hero-desc { font-size:17px; } .receiver-wrap { width:min(470px,95%); margin:45px auto 0; padding:10px 0 0; }
+      .receiver-wrap::before,.receiver-wrap::after { display:none; }
+      .receiver { transform:rotate(.5deg); } .receiver-freq { font-size:40px; }
+      .featured { grid-template-columns:1fr; } .feature-photo { min-height:320px; order:-1; } .feature-copy { padding:33px 26px 41px; }
+      .log-section { padding:67px 0 70px; } .archive-tools { align-items:stretch; flex-direction:column; }
+      .filters { gap:5px; } .search { align-self:stretch; } .search input { width:100%; }
+      .cards { grid-template-columns:repeat(2,minmax(0,1fr)); gap:34px 18px; } .card-visual { height:205px; }
+      .about-layout { grid-template-columns:1fr; gap:25px; } .about-band { padding:55px 0; }
+      .detail-content { grid-template-columns:1fr; gap:24px; } .detail-info { display:flex; flex-wrap:wrap; gap:8px 18px; } .detail-info strong { margin:0; }
+    }
+    @media(max-width:500px) {
+      .brand { gap:11px; } .brand-title { font-size:23px; letter-spacing:-1.3px; } .brand-sub { font-size:7px; }
+      .navlinks a:nth-child(2) { display:none; }
+      .hero h1 { font-size:clamp(53px,13vw,70px); }
+      .cards { grid-template-columns:1fr; } .card-visual { height:285px; }
+      .post-card h3 { font-size:31px; } .log-top h2 { font-size:50px; }
+      .footer .shell { flex-direction:column; align-items:flex-start; }
+      .receiver-freq { font-size:clamp(31px,9vw,45px); } .receiver-face { padding:12px; }
+      .detail-image { height:340px; } .detail-header { padding:36px 0 20px; }
+      .detail-header h1 { font-size:clamp(47px,12vw,72px); } .entry-body p { font-size:17px; }
+    }
+    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } .on-air::before { animation:none; } }
+  </style>
+</head>
+<body>
+  <div class="topbar"><div class="shell"><div class="on-air">THE LISTENING POST · SWL FIELD JOURNAL</div><div>VOL. 01 &nbsp; / &nbsp; EST. 2026</div></div></div>
+  <header class="shell mainnav">
+    <a href="#home" class="brand" aria-label="Signal and Static home">
+      <span class="brand-icon" aria-hidden="true"></span>
+      <span><span class="brand-title">Signal <i>&</i> Static</span><span class="brand-sub">A RADIO LISTENING JOURNAL</span></span>
+    </a>
+    <nav class="navlinks" aria-label="Main navigation"><a href="#archive">The logbook</a><a href="#about">About</a><a href="#archive" class="nav-cta">Explore entries ↗</a></nav>
+  </header>
+
+  <main id="homeView">
+    <section class="shell hero">
+      <div>
+        <div class="eyebrow">Notes from the airwaves</div>
+        <h1>Tuning into<br>the <em>unseen.</em></h1>
+        <p class="hero-desc">A little corner of the internet for old-school radio charm, software-defined radio experiments, homemade antennas and the joy of hearing a distant signal.</p>
+        <div class="hero-meta"><span class="dash"></span><span>SWL · SDR · VHF / UHF · RADIO EXPERIMENTS</span></div>
+        <a class="hero-button" href="#archive">Open the field journal <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="receiver-wrap" aria-label="Illustrated vintage radio dial with selectable example bands">
+        <div class="receiver">
+          <div class="receiver-head"><span>SHORTWAVE / VHF</span><span>RECEIVER MODEL 001</span></div>
+          <div class="receiver-face">
+            <div class="receiver-rules" aria-hidden="true"></div>
+            <div class="receiver-freq" id="radioFrequency">145.625</div>
+            <div class="receiver-unit" id="radioUnit">MHz &nbsp; • &nbsp; 2M BAND</div>
+            <div class="receiver-caption" id="radioDesc">FIELD NOTE · YATIYANTHOTA REPEATER</div>
+          </div>
+          <div class="receiver-bottom">
+            <div class="band-buttons" aria-label="Choose an example radio band">
+              <button type="button" class="active" aria-pressed="true" data-radio="2m">2M</button>
+              <button type="button" aria-pressed="false" data-radio="70cm">70CM</button>
+              <button type="button" aria-pressed="false" data-radio="40m">40M</button>
+            </div>
+            <div class="knob" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell" aria-labelledby="featuredTitle">
+      <div class="section-rule"><h2 id="featuredTitle">01 / FROM THE FIELD</h2><span>FEATURED LOG ENTRY</span></div>
+      <div id="featuredPost"></div>
+    </section>
+
+    <section class="shell log-section" id="archive" aria-labelledby="archiveTitle">
+      <div class="log-top"><div><div class="eyebrow">A growing collection of field notes</div><h2 id="archiveTitle">The logbook<span style="color:var(--accent)">.</span></h2></div><span class="log-count" id="archiveCount" aria-live="polite"></span></div>
+      <div class="archive-tools">
+        <div class="filters" id="categoryFilters" role="group" aria-label="Filter posts by topic"></div>
+        <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="postSearch" type="search" placeholder="SEARCH FIELD NOTES" aria-label="Search field notes" /></label>
+      </div>
+      <div class="cards" id="postCards"></div>
+      <div class="empty" id="noResults" hidden>No signals found. Try another search or category.</div>
+    </section>
+
+    <section class="about-band" id="about"><div class="shell about-layout">
+      <div><div class="eyebrow">Behind the dial</div><h2>For the love of <em>radio.</em></h2></div>
+      <div><p>This is a personal radio experiment journal, inspired by vintage receivers, shortwave listening, and the simple thrill of discovering what is travelling through the air. Here I keep the stories, photos and lessons from each listening session—longer-lasting than a social media feed.</p><div class="statline">SIGNAL REPORT: ALWAYS CURIOUS &nbsp; / &nbsp; QTH: SRI LANKA</div></div>
+    </div></section>
+  </main>
+
+  <main class="shell post-page" id="postView" hidden aria-live="polite"></main>
+  <footer class="footer"><div class="shell"><div class="micro">© <span id="currentYear"></span> SIGNAL & STATIC &nbsp; · &nbsp; MADE FOR THE CURIOUS</div><div class="micro">GOOD SIGNALS. GOOD STORIES. <a href="#home">BACK TO TOP ↑</a></div></div></footer>
+
+  <script>
+    /* POSTS: one folder per article, containing post.txt and image.png.
+       See README.md for the simple post.txt format.
+       The published site discovers folders via GitHub's public API, or via
+       post/index.json if your deployment generated a static folder index. */
+    const GITHUB_CONFIG = {
+      owner: 'dinuka-kasun-medis',
+      repo: 'dinuka-kasun-medis.github.io',
+      branch: 'main',
+      // Path from the repository root to this blog; use '' at repo root.
+      folder: 'radio'
+    };
+    const POSTS = [];
+    let sorted = [];
+    let CATEGORIES = ['All notes'];
+    let selectedCategory = 'All notes';
+    const $ = id => document.getElementById(id);
+    const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
+    const formatDate = value => { if(!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) return 'UNDATED'; const d = new Date(`${value}T12:00:00`); return Number.isNaN(d.valueOf()) ? 'UNDATED' : d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).toUpperCase(); };
+    const permalink = post => `#post/${encodeURIComponent(post.slug)}`;
+    const folderTitle = name => name.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, c => c.toUpperCase());
+    const postPath = name => `post/${encodeURIComponent(name)}/`;
+    // Turn post.txt into metadata + the remaining caption/article after a --- divider.
+    function parsePost(text, folder) {
+      const lines = String(text).replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n').split('\n');
+      const divider = lines.findIndex(line => /^\s*---\s*$/.test(line));
+      const metaLines = divider >= 0 ? lines.slice(0, divider) : [];
+      const metadata = {};
+      for(const line of metaLines) {
+        const match = line.match(/^\s*([A-Za-z][A-Za-z0-9 _-]*):\s*(.*)$/);
+        if(match) metadata[match[1].replace(/[\s_-]/g,'').toLowerCase()] = match[2].trim();
+      }
+      const body = (divider >= 0 ? lines.slice(divider+1) : lines).join('\n').trim();
+      const title = metadata.title || folderTitle(folder);
+      // Limit URL in a post to http/https, even if someone supplied another scheme.
+      const instagram = /^https?:\/\//i.test(metadata.instagram || '') ? metadata.instagram : '';
+      const summary = metadata.summary || metadata.excerpt || body.replace(/\s+/g, ' ').slice(0, 165).trim() + (body.length > 165 ? '…' : '');
+      return {
+        slug: folder,
+        title,
+        date: /^\d{4}-\d{2}-\d{2}$/.test(metadata.date || '') ? metadata.date : '',
+        category: metadata.category || 'Field notes',
+        band: metadata.band || metadata.frequency || 'RADIO JOURNAL',
+        excerpt: summary,
+        body: body || 'New radio field note.',
+        image: postPath(folder) + 'image.png',
+        imageAlt: metadata.imagealt || title,
+        art: /antenna|dipole|yagi/i.test(metadata.category || '') ? 'antenna' : /sdr/i.test(metadata.category || '') ? 'sdr' : 'websdr',
+        artLabel: 'FIELD NOTE',
+        instagram
+      };
+    }
+    async function fetchText(url) {
+      const response = await fetch(url, {cache: 'no-store'});
+      if(!response.ok) throw new Error(`Cannot load ${url}: ${response.status}`);
+      return response.text();
+    }
+    async function discoverPostFolders() {
+      // GitHub Pages is static and cannot list directories itself.
+      // 1. Try an optional generated index (no API rate limits).
+      try {
+        const response = await fetch('post/index.json', {cache:'no-store'});
+        if(response.ok) {
+          const names = await response.json();
+          if(Array.isArray(names)) return names.filter(x => typeof x === 'string' && !x.startsWith('_'));
+        }
+      } catch(err) { /* no local index -- GitHub API is the fallback */ }
+      // 2. Public GitHub repo directory listing: automatically sees new folders.
+      const {owner, repo, branch, folder} = GITHUB_CONFIG;
+      const directory = [folder, 'post'].filter(Boolean).map(encodeURIComponent).join('/');
+      const url = `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${directory}?ref=${encodeURIComponent(branch)}`;
+      const response = await fetch(url, {headers:{Accept:'application/vnd.github+json'}});
+      if(!response.ok) throw new Error(`GitHub could not list your post folders (HTTP ${response.status}). Verify the repo is public and GITHUB_CONFIG is correct.`);
+      const result = await response.json();
+      if(!Array.isArray(result)) throw new Error('GitHub did not return a folder listing.');
+      return result.filter(item => item.type === 'dir' && !item.name.startsWith('_')).map(item => item.name);
+    }
+    async function loadPosts() {
+      const folders = await discoverPostFolders();
+      const results = await Promise.allSettled(folders.map(async folder => {
+        // Browser cannot read the visitor's filesystem; text is loaded from the published website.
+        const text = await fetchText(postPath(folder)+'post.txt');
+        return parsePost(text, folder);
+      }));
+      for(const result of results) {
+        if(result.status === 'fulfilled') POSTS.push(result.value);
+        else console.warn('Skipped an unreadable post:', result.reason);
+      }
+      sorted = [...POSTS].sort((a,b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
+      CATEGORIES = ['All notes',...new Set(sorted.map(p => p.category))];
+    }
+
+    const BAND_SAMPLES = {
+      "2m": { frequency:"145.625", unit:"MHz  •  2M BAND", desc:"FIELD NOTE · YATIYANTHOTA REPEATER" },
+      "70cm": { frequency:"434.440", unit:"MHz  •  70CM BAND", desc:"FIELD NOTE · UHF EXPLORATION" },
+      "40m": { frequency:"7.100", unit:"MHz  •  40M BAND", desc:"FIELD NOTE · HF LISTENING" }
+    };
+
+    function visual(post, className="") {
+      let icon = `<svg viewBox="0 0 240 125" aria-hidden="true"><path d="M10 83 H35 l10 -18 12 39 16 -56 20 56 11 -24 h17 l13 -20 15 41 14 -53 16 36 h47"/><path d="M98 18 q22 -19 44 0 M88 7 q32 -29 65 0"/></svg>`;
+      if(post.art === 'antenna') icon = `<svg viewBox="0 0 240 125" aria-hidden="true"><line x1="120" y1="16" x2="120" y2="107"/><line x1="44" y1="62" x2="196" y2="62"/><line x1="120" y1="62" x2="76" y2="21"/><line x1="120" y1="62" x2="164" y2="21"/><path d="M76 111 H164 M97 101 H143 M106 92 H134"/><path d="M40 35 q-15 24 0 48 M200 35 q15 24 0 48"/></svg>`;
+      if(post.art === 'sdr') icon = `<svg viewBox="0 0 240 125" aria-hidden="true"><rect x="50" y="38" width="140" height="51" rx="7"/><rect x="35" y="54" width="15" height="18"/><rect x="190" y="54" width="16" height="18"/><path d="M75 53 H162 M75 63 H130 M75 73 H152"/><circle cx="173" cy="65" r="6"/><path d="M57 24 H182 M65 102 H177"/></svg>`;
+      return `<div class="photo-frame ${className}"><div class="visual-art" data-theme="${escapeHtml(post.art)}"><div class="art-circle"></div><div class="art-signal">${icon}</div><h4>${escapeHtml(post.artLabel || 'FIELD NOTE')}</h4><small>ANALOG DAYS · DIGITAL WAVES</small></div>${post.image ? `<img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.imageAlt || post.title)}" loading="lazy" onerror="this.remove()">` : ''}<span class="visual-stamp">${escapeHtml(post.band)}</span></div>`;
+    }
+    function featured() {
+      const p = sorted[0];
+      if(!p) { $('featuredPost').innerHTML = `<div class="empty">No entries yet. Add a folder under <strong>post/</strong>, with <strong>post.txt</strong> and <strong>image.png</strong>.</div>`; return; }
+      $('featuredPost').innerHTML = `<article class="featured"><div class="feature-copy"><div class="tag-row"><span class="tag">LATEST ENTRY</span><span>${formatDate(p.date)}</span><span class="tag-separator">/</span><span>${escapeHtml(p.category)}</span></div><h3>${escapeHtml(p.title)}</h3><p>${escapeHtml(p.excerpt)}</p><a class="read-link" href="${permalink(p)}">Read the full story <span aria-hidden="true">↗</span></a></div>${visual(p,'feature-photo')}</article>`;
+    }
+    function renderFilters() {
+      $('categoryFilters').innerHTML = CATEGORIES.map(c => `<button type="button" class="filter ${c===selectedCategory ? 'active' : ''}" aria-pressed="${c===selectedCategory}" data-filter="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join('');
+    }
+    function renderArchive() {
+      const query = $('postSearch').value.trim().toLowerCase();
+      const match = sorted.filter(p => (selectedCategory === 'All notes' || p.category === selectedCategory) && [p.title,p.excerpt,p.body,p.band,p.category].join(' ').toLowerCase().includes(query));
+      $('archiveCount').textContent = `${String(match.length).padStart(2,'0')} ENTR${match.length===1?'Y':'IES'} / ARCHIVED`;
+      $('noResults').textContent = sorted.length ? 'No signals found. Try another search or category.' : 'No posts found yet. Create a folder inside post/ and add post.txt + image.png.';
+      $('noResults').hidden = match.length > 0;
+      $('postCards').innerHTML = match.map(p => `<article class="post-card">${visual(p,'card-visual')}<div class="post-meta"><span>${formatDate(p.date)}</span><span>·</span><span>${escapeHtml(p.category)}</span></div><h3><a href="${permalink(p)}">${escapeHtml(p.title)}</a></h3><p>${escapeHtml(p.excerpt)}</p><a class="read-link" href="${permalink(p)}">Read entry <span aria-hidden="true">↗</span></a></article>`).join('');
+    }
+    function showPost(post) {
+      document.title = `${post.title} — Signal & Static`;
+      $('homeView').hidden = true; $('postView').hidden = false;
+      const index = sorted.findIndex(p => p.slug===post.slug), next = sorted[(index+1)%sorted.length];
+      const paragraphs = post.body.trim().split(/\n\s*\n/).map(p => `<p>${escapeHtml(p).replace(/\n/g,'<br>')}</p>`).join('');
+      $('postView').innerHTML = `<a href="#archive" class="back">← Back to the logbook</a><article><header class="detail-header"><div class="tag-row"><span class="tag">${escapeHtml(post.category)}</span><span>${formatDate(post.date)}</span><span class="tag-separator">/</span><span>${escapeHtml(post.band)}</span></div><h1>${escapeHtml(post.title)}</h1><p class="detail-intro">${escapeHtml(post.excerpt)}</p></header>${visual(post,'detail-image')}<div class="detail-content"><aside class="detail-info"><div><strong>DATE RECORDED</strong>${formatDate(post.date)}</div><div><strong>FREQUENCY / TOPIC</strong>${escapeHtml(post.band)}</div><div><strong>LOG CATEGORY</strong>${escapeHtml(post.category)}</div></aside><div><div class="entry-body">${paragraphs}</div><div class="story-actions"><button type="button" class="outline-button" id="copyStoryLink">Copy story link</button>${post.instagram ? `<a class="outline-button" target="_blank" rel="noopener noreferrer" href="${escapeHtml(post.instagram)}">See original Instagram post ↗</a>` : ''}</div></div></div></article><div class="related"><div class="micro" style="color:var(--accent);margin-bottom:13px">NEXT IN THE LOGBOOK</div><a href="${permalink(next)}">${escapeHtml(next.title)} &nbsp; ↗</a></div>`;
+      $('copyStoryLink').addEventListener('click', async e => {
+        const url = location.href;
+        try {
+          if(navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(url);
+          else { const t=document.createElement('textarea');t.value=url; t.style.position='fixed'; t.style.opacity='0';document.body.append(t);t.select();if(!document.execCommand('copy'))throw Error('Cannot copy');t.remove(); }
+          e.currentTarget.textContent='Link copied ✓';
+        } catch(err) { e.currentTarget.textContent='Copy URL from address bar'; }
+      });
+    }
+    function route() {
+      let fragment; try { fragment = decodeURIComponent(location.hash.slice(1)); } catch(e) { fragment = ''; }
+      if(fragment.startsWith('post/')) {
+        const post = sorted.find(p => p.slug===fragment.slice(5));
+        if(post) { showPost(post); window.scrollTo(0,0); return; }
+      }
+      $('homeView').hidden=false; $('postView').hidden=true;
+      document.title='Signal & Static — A Radio Listening Journal';
+      if(fragment === 'archive' || fragment === 'about') requestAnimationFrame(() => $(fragment)?.scrollIntoView({behavior:'auto'}));
+      else window.scrollTo(0,0);
+    }
+    document.addEventListener('DOMContentLoaded', async () => {
+      $('currentYear').textContent=new Date().getFullYear();
+      $('featuredPost').innerHTML='<div class="empty">Tuning in to your field notes…</div>';
+      $('postCards').innerHTML='<div class="empty">Loading radio journal…</div>';
+      try { await loadPosts(); } catch(err) {
+        console.error(err);
+        $('featuredPost').innerHTML='<div class="empty">Unable to load posts. Check that the blog is on GitHub Pages, the repository is public, or generate <code>post/index.json</code> for local preview.</div>';
+        $('postCards').innerHTML='';
+        $('archiveCount').textContent='OFF AIR';
+        $('noResults').textContent='Could not locate the post folders. See README.md for setup.'; $('noResults').hidden=false;
+      }
+      if(POSTS.length || !$('featuredPost').textContent.includes('Unable to load')) { featured(); renderFilters(); renderArchive(); }
+      route();
+      window.addEventListener('hashchange',route);
+      $('postSearch').addEventListener('input',renderArchive);
+      $('categoryFilters').addEventListener('click', e => {
+        const b = e.target.closest('button[data-filter]'); if(!b)return;
+        selectedCategory=b.dataset.filter;renderFilters();renderArchive();
+      });
+      document.querySelectorAll('[data-radio]').forEach(b=>b.addEventListener('click',()=>{
+        document.querySelectorAll('[data-radio]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b));});
+        const mode=BAND_SAMPLES[b.dataset.radio]; $('radioFrequency').textContent=mode.frequency; $('radioUnit').textContent=mode.unit; $('radioDesc').textContent=mode.desc;
+      }));
+    });
+  </script>
+</body>
+</html>

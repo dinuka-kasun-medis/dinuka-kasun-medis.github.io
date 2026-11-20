@@ -1,0 +1,13 @@
+Title: A Broomstick, a Window and a Clearer Signal
+Date: 2026-11-19
+Category: Antennas
+Band: 145.625 MHz
+Summary: Moving my antenna a little farther outdoors made reception noticeably clearer.
+Instagram:
+ImageAlt: Vintage antenna illustration for a radio listening field note
+---
+For today's experiment, I used a broomstick to extend the antenna outside the window while it remained secured to my tripod setup.
+
+Reception was clearer than in my previous indoor tests. I could hear the RSSL Daily Net on the Yatiyanthota 2m repeater, 145.625 MHz, and continued testing SDR++ settings.
+
+A small change to antenna placement can make a big difference. This is a sample article for the template—edit it to match your own Instagram caption.

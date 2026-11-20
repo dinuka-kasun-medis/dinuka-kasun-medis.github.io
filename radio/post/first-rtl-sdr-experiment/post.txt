@@ -1,0 +1,13 @@
+Title: My First Software-Defined Radio — RTL-SDR V3
+Date: 2026-11-17
+Category: SDR
+Band: RTL-SDR V3
+Summary: My first SDR receiver and what I learned about choosing the right connectors.
+Instagram:
+ImageAlt: Vintage-style illustration representing an RTL-SDR receiver
+---
+My first SDR experiment started with the RTL-SDR V3. It's not the latest model, but it's a useful beginner receiver for getting familiar with radio signals.
+
+I bought only the dongle at first. That led me to my first practical lesson: check the connectors and adapters before ordering. Finding the right SMA and coax connection matters just as much as installing the software.
+
+This is a sample article. Replace the image and text with your own original Instagram photo and caption. 📻
